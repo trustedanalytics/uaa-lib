@@ -16,6 +16,7 @@
 package org.trustedanalytics.uaa;
 
 import org.cloudfoundry.identity.uaa.rest.SearchResults;
+import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 
 import java.util.Collection;
@@ -26,11 +27,15 @@ public interface UaaOperations {
 
     ScimUser createUser(String username, String password);
 
+    void updateGroup(ScimGroup group);
+
     void deleteUser(UUID userGuid);
 
     SearchResults<ScimUser> getUsers();
 
     Collection<UserIdNamePair> findUserNames(Collection<UUID> users);
+
+    Optional<ScimGroup> getGroup(String groupName);
 
     void changePassword(UUID guid, ChangePasswordRequest request);
 

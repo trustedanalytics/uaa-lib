@@ -19,6 +19,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import org.cloudfoundry.identity.uaa.rest.SearchResults;
+import org.cloudfoundry.identity.uaa.scim.ScimGroup;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -48,6 +49,11 @@ public class UaaClient implements UaaOperations {
     }
 
     @Override
+    public void updateGroup(ScimGroup group) {
+        uaaRestTemplate.put(uaaBaseUrl + "/Groups/{id}", group, group.getId());
+    }
+
+    @Override
     public SearchResults<ScimUser> getUsers() {
         ResponseEntity<SearchResults<ScimUser>> result = uaaRestTemplate.exchange(
             uaaBaseUrl + "/Users",
@@ -72,6 +78,13 @@ public class UaaClient implements UaaOperations {
         
         String path = uaaBaseUrl + "/Users?attributes=id,userName&filter=" + filter;
         return uaaRestTemplate.getForObject(path, UserIdNameList.class).getUsers();
+    }
+
+    @Override
+    public Optional<ScimGroup> getGroup(String groupName) {
+        String query = uaaBaseUrl + "/Groups?filter=displayName eq '{groupName}'&startIndex=1";
+        Map<String, Object> pathVars = ImmutableMap.of("groupName", groupName);
+        return Optional.ofNullable(uaaRestTemplate.getForObject(query, ScimGroup.class, pathVars));
     }
     
     @Override
