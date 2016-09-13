@@ -20,6 +20,7 @@ import com.google.common.collect.Iterables;
 import lombok.AllArgsConstructor;
 import org.cloudfoundry.identity.uaa.rest.SearchResults;
 import org.cloudfoundry.identity.uaa.scim.ScimGroup;
+import org.cloudfoundry.identity.uaa.scim.ScimGroupMember;
 import org.cloudfoundry.identity.uaa.scim.ScimUser;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -49,8 +50,16 @@ public class UaaClient implements UaaOperations {
     }
 
     @Override
-    public void updateGroup(ScimGroup group) {
-        uaaRestTemplate.put(uaaBaseUrl + "/Groups/{id}", group, group.getId());
+    public ScimGroupMember addUserToGroup(ScimGroup group, UUID userGuid) {
+        Map<String, Object> pathVars = ImmutableMap.of("groupId", group.getId());
+        return uaaRestTemplate.postForObject(uaaBaseUrl + "/Groups/{groupId}/members",
+                new ScimGroupMember(userGuid.toString()), ScimGroupMember.class, pathVars);
+    }
+
+    @Override
+    public void removeUserFromGroup(ScimGroup group, UUID userGuid) {
+        Map<String, Object> pathVars = ImmutableMap.of("groupId", group.getId(), "userGuid", userGuid);
+        uaaRestTemplate.delete(uaaBaseUrl + "/Groups/{groupId}/members/{userGuid}", pathVars);
     }
 
     @Override
