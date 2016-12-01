@@ -108,4 +108,9 @@ public class UaaClient implements UaaOperations {
         UserIdNameList result = uaaRestTemplate.getForObject(uaaBaseUrl + query, UserIdNameList.class, pathVars);
         return Optional.ofNullable(Iterables.getFirst(result.getUsers(), null));
     }
+
+    @Override
+    public String getUaaHealth() {
+        return uaaRestTemplate.getForObject(uaaBaseUrl + "/healthz", String.class);
+    }
 }

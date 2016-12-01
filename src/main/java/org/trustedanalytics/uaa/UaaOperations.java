@@ -43,4 +43,6 @@ public interface UaaOperations {
     void changePassword(UUID guid, ChangePasswordRequest request);
 
     Optional<UserIdNamePair> findUserIdByName(String userName);
+
+    String getUaaHealth();
 }
