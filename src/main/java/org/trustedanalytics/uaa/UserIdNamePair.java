@@ -19,20 +19,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
-import java.util.UUID;
-
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserIdNamePair {
 
     @Getter
     @JsonProperty("id")
-    private UUID guid;
+    private String guid;
 
     @Getter
     @JsonProperty("userName")
     private String userName;
 
-    public static UserIdNamePair of(UUID guid, String userName) {
+    public static UserIdNamePair of(String guid, String userName) {
         UserIdNamePair newPair = new UserIdNamePair();
         newPair.guid = guid;
         newPair.userName = userName;

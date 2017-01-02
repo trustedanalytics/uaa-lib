@@ -31,7 +31,6 @@ import org.trustedanalytics.org.cloudfoundry.identity.uaa.scim.ScimUserFactory;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.joining;
 
@@ -50,15 +49,15 @@ public class UaaClient implements UaaOperations {
     }
 
     @Override
-    public ScimGroupMember addUserToGroup(ScimGroup group, UUID userGuid) {
+    public ScimGroupMember addUserToGroup(ScimGroup group, String userGuid) {
         Map<String, Object> pathVars = ImmutableMap.of("groupId", group.getId());
         return uaaRestTemplate.postForObject(uaaBaseUrl + "/Groups/{groupId}/members",
-                new ScimGroupMember(userGuid.toString()), ScimGroupMember.class, pathVars);
+                new ScimGroupMember(userGuid), ScimGroupMember.class, pathVars);
     }
 
     @Override
-    public void removeUserFromGroup(ScimGroup group, UUID userGuid) {
-        Map<String, Object> pathVars = ImmutableMap.of("groupId", group.getId(), "userGuid", userGuid);
+    public void removeUserFromGroup(ScimGroup group, String userGuid) {
+        Map<String, String> pathVars = ImmutableMap.of("groupId", group.getId(), "userGuid", userGuid);
         uaaRestTemplate.delete(uaaBaseUrl + "/Groups/{groupId}/members/{userGuid}", pathVars);
     }
 
@@ -75,12 +74,12 @@ public class UaaClient implements UaaOperations {
     }
 
     @Override
-    public void deleteUser(UUID userGuid) {
-        uaaRestTemplate.delete(uaaBaseUrl + "/Users/{id}", userGuid.toString());
+    public void deleteUser(String userGuid) {
+        uaaRestTemplate.delete(uaaBaseUrl + "/Users/{id}", userGuid);
     }
     
     @Override
-    public Collection<UserIdNamePair> findUserNames(Collection<UUID> users) {
+    public Collection<UserIdNamePair> findUserNames(Collection<String> users) {
         String filter = users.stream()
                 .map(uuid -> "Id eq \"" + uuid + "\"")
                 .collect(joining(" or "));
@@ -97,7 +96,7 @@ public class UaaClient implements UaaOperations {
     }
     
     @Override
-    public void changePassword(UUID guid, ChangePasswordRequest request) {
+    public void changePassword(String guid, ChangePasswordRequest request) {
         uaaRestTemplate.put(uaaBaseUrl + "/Users/{id}/password", request, guid);
     }
 

@@ -22,25 +22,24 @@ import org.cloudfoundry.identity.uaa.scim.ScimUser;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 public interface UaaOperations {
 
     ScimUser createUser(String username, String password);
 
-    ScimGroupMember addUserToGroup(ScimGroup group, UUID userGuid);
+    ScimGroupMember addUserToGroup(ScimGroup group, String userGuid);
 
-    void removeUserFromGroup(ScimGroup group, UUID userGuid);
+    void removeUserFromGroup(ScimGroup group, String userGuid);
 
-    void deleteUser(UUID userGuid);
+    void deleteUser(String userGuid);
 
     SearchResults<ScimUser> getUsers();
 
-    Collection<UserIdNamePair> findUserNames(Collection<UUID> users);
+    Collection<UserIdNamePair> findUserNames(Collection<String> users);
 
     Optional<ScimGroup> getGroup(String groupName);
 
-    void changePassword(UUID guid, ChangePasswordRequest request);
+    void changePassword(String guid, ChangePasswordRequest request);
 
     Optional<UserIdNamePair> findUserIdByName(String userName);
 
